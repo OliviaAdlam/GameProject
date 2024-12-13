@@ -19,7 +19,7 @@ public class PlayerStats : MonoBehaviour
         currentLives = 3;
         sword.SetActive(false);
         playerMove = GetComponent<PlayerMove>();
-
+        ApplyUpgrades();
         
     }
 
