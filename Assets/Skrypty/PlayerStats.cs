@@ -19,6 +19,8 @@ public class PlayerStats : MonoBehaviour
         currentLives = 3;
         sword.SetActive(false);
         playerMove = GetComponent<PlayerMove>();
+
+        
     }
 
     void Update()
@@ -30,10 +32,25 @@ public class PlayerStats : MonoBehaviour
             StartCoroutine(PerformAttack());
         }
     }
+
     public void AddCoins(int amount)
     {
         playerScore += amount;
         Debug.Log("Coins added: " + amount + ". Total: " + playerScore);
+    }
+
+    public void ApplyUpgrades()
+    {
+        maxLives = 10 + GlobalData.addLives;
+        attackDamage = 1 + GlobalData.addAttack;
+        playerMove.moveSpeed = 5f + GlobalData.addSpeed;
+
+        if (currentLives < maxLives)
+        {
+            currentLives = maxLives;
+        }
+
+        Debug.Log($"Aktualne statystyki: MaxLives={maxLives}, Attack={attackDamage}, Speed={playerMove.moveSpeed}");
     }
 
     IEnumerator PerformAttack()
@@ -77,7 +94,6 @@ public class PlayerStats : MonoBehaviour
             Coin coin = other.GetComponent<Coin>();
             if (coin != null)
             {
-                // Synchronize with GameManager
                 
                 Destroy(other.gameObject);
             }
