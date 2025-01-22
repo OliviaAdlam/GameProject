@@ -8,7 +8,10 @@ public class SceneTransitionManager : MonoBehaviour
     void Awake()
     {
         if (Instance == null)
+        {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         else
             Destroy(gameObject);
 
@@ -17,12 +20,15 @@ public class SceneTransitionManager : MonoBehaviour
 
     public void LoadHubScene()
     {
-        SceneManager.LoadScene("HubScene");
+        SceneManager.LoadScene("Dom");
+        
     }
 
     public void LoadAdventureScene()
     {
+        Debug.Log("Do boju");
         SceneManager.LoadScene("Pole walki");
+        Debug.Log("boju");
     }
 
     public void QuitGame()
