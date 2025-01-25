@@ -51,3 +51,4 @@ public class Enemy : MonoBehaviour
     {
         // Add any additional enemy logic here
     }
+}
