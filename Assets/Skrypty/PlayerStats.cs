@@ -100,7 +100,7 @@ public class PlayerStats : MonoBehaviour
         }
 
         // Only take damage if the colliding object is an enemy AND we're the player (not the weapon)
-        if (other.CompareTag("Enemy") && gameObject.CompareTag("Player"))
+        /*if (other.CompareTag("Enemy") && gameObject.CompareTag("Player"))
         {
             Enemy enemy = other.GetComponent<Enemy>();
             if (enemy != null)
@@ -108,7 +108,7 @@ public class PlayerStats : MonoBehaviour
                 TakeDamage(enemy.damage);
                 Debug.Log("Took damage!");
             }
-        }
+        }*/
     }
 
     public void TakeDamage(int damage)
