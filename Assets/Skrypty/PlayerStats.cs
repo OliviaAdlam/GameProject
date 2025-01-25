@@ -42,7 +42,7 @@ public class PlayerStats : MonoBehaviour
     public void ApplyUpgrades()
     {
         maxLives = 10 + GlobalData.addLives;
-        attackDamage = 1 + GlobalData.addAttack;
+        attackDamage = 1 + GlobalData.addAttack + (int)GlobalData.currentWeaponDamage;
         playerMove.moveSpeed = 5f + GlobalData.addSpeed;
 
         if (currentLives < maxLives)
@@ -75,31 +75,32 @@ public class PlayerStats : MonoBehaviour
 
     void UpdateSwordPosition()
     {
-        if (sword == null) return;
+        if (sword == null || playerMove == null || playerMove.sword == null) return;
 
         Vector3 swordPosition = playerMove.transform.position;
 
-        if (playerMove != null)
+        // Only update if the sword reference is still valid
+        if (playerMove.sword != null)
         {
-            swordPosition = playerMove.sword.transform.position;
+            sword.transform.position = playerMove.sword.transform.position;
         }
-
-        sword.transform.position = swordPosition;
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Coin"))
+        // Only collect coins if it's the player colliding, not the weapon
+        if (other.CompareTag("Coin") && other.gameObject.layer != LayerMask.NameToLayer("Weapon"))
         {
             Coin coin = other.GetComponent<Coin>();
             if (coin != null)
             {
-                
+                GlobalData.totalCoins++;
                 Destroy(other.gameObject);
             }
         }
 
-        if (other.CompareTag("Enemy"))
+        // Only take damage if the colliding object is an enemy AND we're the player (not the weapon)
+        if (other.CompareTag("Enemy") && gameObject.CompareTag("Player"))
         {
             Enemy enemy = other.GetComponent<Enemy>();
             if (enemy != null)

@@ -65,4 +65,9 @@ public class PlayerMove : MonoBehaviour
 
         sword.transform.position = swordPosition;
     }
+
+    public Vector2 GetLastMovementDirection()
+    {
+        return lastMovementDirection;
+    }
 }

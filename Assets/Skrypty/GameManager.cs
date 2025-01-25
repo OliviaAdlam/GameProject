@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -55,6 +56,26 @@ public class GameManager : MonoBehaviour
         if (pausePanel == null || nextWavePanel == null)
         {
             Debug.LogWarning("One or more UI elements could not be found!");
+        }
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log($"Scene loaded: {scene.name}");
+        if (scene.name == "Pole walki") // Ensure this matches your adventure scene name
+        {
+            WeaponSpawn weaponSpawn = FindObjectOfType<WeaponSpawn>();
+            if (weaponSpawn != null)
+            {
+                weaponSpawn.EquipWeaponToPlayer(); // Equip the weapon to the player
+                Debug.Log("Weapon equipped to player.");
+            }
+            else
+            {
+                Debug.LogError("WeaponSpawn not found in the scene.");
+            }
         }
     }
 

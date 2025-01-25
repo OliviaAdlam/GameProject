@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7361664200645627037}
   - component: {fileID: 7491950454534880605}
   - component: {fileID: 5856973477324134090}
+  - component: {fileID: 1650881541319131937}
   m_Layer: 0
   m_Name: sword
   m_TagString: Weapon
@@ -145,3 +146,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   newWeaponPrefab: {fileID: 3314719522462951201}
   weaponPrice: 0
+--- !u!114 &1650881541319131937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3314719522462951201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83aa1c921c247cf4b846c7c4a0edc210, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponName: siekiera
+  damage: 1
+  attackSpeed: 3
+  weaponSprite: {fileID: 21300000, guid: 4341057ae55a6a34b8a16ea7f3dc5aa7, type: 3}
+  offsetDistance: 2

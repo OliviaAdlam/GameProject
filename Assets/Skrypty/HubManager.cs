@@ -13,7 +13,8 @@ public class HubManager : MonoBehaviour
 
     public void StartAdventure()
     {
-        SceneTransitionManager.Instance.LoadAdventureScene(); // Load the adventure scene
+        Debug.Log($"Starting adventure with wave: {GlobalData.currentWave}");
+        SceneTransitionManager.Instance.LoadAdventureScene();
     }
 
     public void QuitGame()
