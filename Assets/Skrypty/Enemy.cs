@@ -3,20 +3,19 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public int maxHealth = 5; // Maximum health of the enemy
+    public int maxHealth = 5; 
     private int currentHealth;
-    public int damage = 1;   // Damage dealt by enemy
+    public int damage = 1; 
 
-    public GameObject coinPrefab;  // Reference to coin prefab
-    public Transform coinSpawnPoint;  // Where the coin should spawn
+    public GameObject coinPrefab;  
+    public Transform coinSpawnPoint;  
 
     void Start()
     {
-        currentHealth = maxHealth; // Start with full health
-        GameManager.Instance.RegisterEnemy(this); // Register this enemy with the GameManager
+        currentHealth = maxHealth;
+        GameManager.Instance.RegisterEnemy(this);
     }
 
-    // Oznacz metodę jako virtual, aby można ją było nadpisywać
     public virtual void TakeDamage(int damage)
     {
         currentHealth -= damage;
@@ -43,6 +42,5 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        // Add any additional enemy logic here
     }
 }
