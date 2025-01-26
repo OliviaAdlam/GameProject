@@ -130,7 +130,20 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Scene loaded: {scene.name}");
         if (scene.name == "Pole walki")
         {
-            // Reset and reapply collider settings for existing enemies
+            // Konfiguracja dla małych przeciwników
+            Smol_Enemy[] smolEnemies = FindObjectsOfType<Smol_Enemy>();
+            foreach (Smol_Enemy enemy in smolEnemies)
+            {
+                BoxCollider2D collider = enemy.GetComponent<BoxCollider2D>();
+                if (collider != null)
+                {
+                    collider.size = new Vector2(0.8f, 0.8f);  // Rozmiar dopasowany do sprite'a
+                    collider.offset = Vector2.zero;
+                    collider.isTrigger = false;  // Ważne - musi być false dla OnCollisionEnter2D
+                }
+            }
+
+            // Istniejący kod dla dużych przeciwników...
             Big_Enemy[] bigEnemies = FindObjectsOfType<Big_Enemy>();
             foreach (Big_Enemy enemy in bigEnemies)
             {
@@ -284,6 +297,16 @@ public class GameManager : MonoBehaviour
                 GameObject enemy = Instantiate(smolEnemyPrefab, spawnPosition, Quaternion.identity);
                 enemy.transform.localScale = new Vector3(5f, 5f, 1f);
                 
+                // Dodaj i skonfiguruj collider
+                BoxCollider2D collider = enemy.GetComponent<BoxCollider2D>();
+                if (collider == null)
+                {
+                    collider = enemy.AddComponent<BoxCollider2D>();
+                }
+                collider.size = new Vector2(0.8f, 0.8f);
+                collider.offset = Vector2.zero;
+                collider.isTrigger = false;
+
                 SpriteRenderer renderer = enemy.GetComponent<SpriteRenderer>();
                 if (renderer != null)
                 {

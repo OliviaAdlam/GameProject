@@ -102,11 +102,29 @@ public class Smol_Enemy : Enemy
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log($"Collision detected with: {collision.gameObject.name}");
         if (collision.gameObject.CompareTag("Player"))
         {
+            Debug.Log("Player collision detected!");
             PlayerStats playerStats = collision.gameObject.GetComponent<PlayerStats>();
             if (playerStats != null)
             {
+                Debug.Log($"Dealing {contactDamage} damage to player");
+                playerStats.TakeDamage(contactDamage);
+            }
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log($"Trigger detected with: {other.gameObject.name}");
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("Player trigger detected!");
+            PlayerStats playerStats = other.GetComponent<PlayerStats>();
+            if (playerStats != null)
+            {
+                Debug.Log($"Dealing {contactDamage} damage to player");
                 playerStats.TakeDamage(contactDamage);
             }
         }
