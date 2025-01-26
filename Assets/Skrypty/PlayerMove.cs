@@ -48,15 +48,6 @@ public class PlayerMove : MonoBehaviour
         {
             spriteRenderer.flipX = false;
         }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            animator.SetBool("isAttacking", true);
-        }
-        else if (Input.GetKeyUp(KeyCode.Space))
-        {
-            animator.SetBool("isAttacking", false);
-        }
     }
 
     void PositionSword()
