@@ -2,38 +2,61 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    public float moveSpeed = 5f; // Speed of movement
+    public float moveSpeed = 5f;
     public float moveHorizontal { get; private set; }
     public float moveVertical { get; private set; }
 
-    private Vector2 lastMovementDirection; // Last movement direction
-    public GameObject sword; // Reference to sword object
+    private Vector2 lastMovementDirection;
+    public GameObject sword;
+
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
 
     void Start()
     {
-        lastMovementDirection = Vector2.zero; // No movement at the start
+        lastMovementDirection = Vector2.zero;
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
-        // Get input for movement (arrow keys or WASD)
         moveHorizontal = Input.GetAxis("Horizontal");
         moveVertical = Input.GetAxis("Vertical");
 
-        // Calculate movement vector
         Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0);
-
-        // Update player's position
         transform.position += movement * moveSpeed * Time.deltaTime;
 
-        // Update last movement direction
         if (movement.magnitude > 0)
         {
             lastMovementDirection = movement.normalized;
         }
 
-        // Update sword position based on movement direction
+        UpdateAnimations(movement);
         PositionSword();
+    }
+
+    void UpdateAnimations(Vector3 movement)
+    {
+        animator.SetBool("isMoving", movement.magnitude > 0);
+
+        if (movement.x < 0)
+        {
+            spriteRenderer.flipX = true;
+        }
+        else if (movement.x > 0)
+        {
+            spriteRenderer.flipX = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            animator.SetBool("isAttacking", true);
+        }
+        else if (Input.GetKeyUp(KeyCode.Space))
+        {
+            animator.SetBool("isAttacking", false);
+        }
     }
 
     void PositionSword()
@@ -44,20 +67,20 @@ public class PlayerMove : MonoBehaviour
 
         if (lastMovementDirection != Vector2.zero)
         {
-            if (lastMovementDirection.x < 0) // Move left
+            if (lastMovementDirection.x < 0)
             {
                 swordPosition.x = transform.position.x - 2f;
             }
-            else if (lastMovementDirection.x > 0) // Move right
+            else if (lastMovementDirection.x > 0)
             {
                 swordPosition.x = transform.position.x + 2f;
             }
 
-            if (lastMovementDirection.y < 0) // Move down
+            if (lastMovementDirection.y < 0)
             {
                 swordPosition.y = transform.position.y - 2f;
             }
-            else if (lastMovementDirection.y > 0) // Move up
+            else if (lastMovementDirection.y > 0)
             {
                 swordPosition.y = transform.position.y + 2f;
             }

@@ -2269,6 +2269,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1650881541319131937, guid: 638fd6ff42e35534db08b390ffc983c1, type: 3}
+      propertyPath: offsetDistance
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3314719522462951201, guid: 638fd6ff42e35534db08b390ffc983c1, type: 3}
       propertyPath: m_Name
       value: sword
