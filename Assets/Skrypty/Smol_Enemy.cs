@@ -16,6 +16,8 @@ public class Smol_Enemy : Enemy
 
     void Start()
     {
+        base.Start();
+
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
         if (playerObject != null)
         {
@@ -75,7 +77,7 @@ public class Smol_Enemy : Enemy
         transform.position += (Vector3)randomDirection * speed * Time.deltaTime;
     }
 
-    void ChangeRandomDirection()
+    public void ChangeRandomDirection()
     {
         if (Time.time - lastDirectionChangeTime >= changeDirectionCooldown)
         {

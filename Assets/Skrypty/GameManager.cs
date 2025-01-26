@@ -15,26 +15,90 @@ public class GameManager : MonoBehaviour
     public GameObject pausePanel;
     public Text totalCoinsText; // Reference to the total coins UI text
 
-    public GameObject enemyPrefab;  
-    public GameObject coinPrefab;   
+    public GameObject smolEnemyPrefab;  // Changed from enemyPrefab
+    public GameObject bigEnemyPrefab;   // Added this
+    public GameObject coinPrefab;
 
     public int coinPercentageOnPauseReturn = 50; 
 
     private bool waveComplete = false;
 
+    // Define spawn boundaries
+    private float minX = -25f;
+    private float maxX = 25f;
+    private float minY = -15f;
+    private float maxY = 15f;
+    private float minSpawnDistance = 8f; // Minimum distance between spawned enemies
+
+    private Vector3 GetRandomSpawnPosition()
+    {
+        Vector3 spawnPos;
+        bool validPosition = false;
+        int maxAttempts = 30;
+        int attempts = 0;
+
+        do
+        {
+            // Get random position within boundaries
+            spawnPos = new Vector3(
+                Random.Range(minX, maxX),
+                Random.Range(minY, maxY),
+                0
+            );
+
+            // Check distance from other enemies
+            validPosition = true;
+            Enemy[] existingEnemies = GameObject.FindObjectsOfType<Enemy>();
+            
+            foreach (Enemy enemy in existingEnemies)
+            {
+                if (Vector3.Distance(spawnPos, enemy.transform.position) < minSpawnDistance)
+                {
+                    validPosition = false;
+                    break;
+                }
+            }
+
+            attempts++;
+        } while (!validPosition && attempts < maxAttempts);
+
+        return spawnPos;
+    }
+
     void Awake()
     {
-        // Set up the singleton for the GameManager
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);  // Keep GameManager across scenes
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject);  // Ensure only one instance of GameManager exists
+            Destroy(gameObject);
+            return;
         }
-        DontDestroyOnLoad(gameObject); // Persist between scenes
+
+        // If we have the old enemyPrefab reference, use it for smolEnemyPrefab
+        if (smolEnemyPrefab == null && GetComponent<MonoBehaviour>().GetType().GetField("enemyPrefab") != null)
+        {
+            smolEnemyPrefab = (GameObject)GetComponent<MonoBehaviour>().GetType().GetField("enemyPrefab").GetValue(this);
+            Debug.Log("Converted old enemyPrefab reference to smolEnemyPrefab");
+        }
+
+        // Load the big enemy prefab by path if it's not assigned
+        if (bigEnemyPrefab == null)
+        {
+            bigEnemyPrefab = Resources.Load<GameObject>("MainAsset/Enemy 1");
+            if (bigEnemyPrefab == null)
+            {
+                Debug.LogError("Failed to load big enemy prefab from Resources folder");
+            }
+        }
+
+        // Create a store for our prefabs
+        GameObject prefabStore = new GameObject("PrefabStore");
+        prefabStore.transform.parent = transform;
+        DontDestroyOnLoad(prefabStore);
 
         nextWavePanel.SetActive(false);
         pausePanel.SetActive(false);
@@ -64,12 +128,26 @@ public class GameManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Debug.Log($"Scene loaded: {scene.name}");
-        if (scene.name == "Pole walki") // Ensure this matches your adventure scene name
+        if (scene.name == "Pole walki")
         {
+            // Reset and reapply collider settings for existing enemies
+            Big_Enemy[] bigEnemies = FindObjectsOfType<Big_Enemy>();
+            foreach (Big_Enemy enemy in bigEnemies)
+            {
+                BoxCollider2D collider = enemy.GetComponent<BoxCollider2D>();
+                if (collider != null)
+                {
+                    collider.size = new Vector2(1f, 1f);  // Larger collider
+                    collider.offset = Vector2.zero;
+                    collider.isTrigger = false;  // Ensure it's not a trigger
+                }
+            }
+
+            // Equip weapon as before
             WeaponSpawn weaponSpawn = FindObjectOfType<WeaponSpawn>();
             if (weaponSpawn != null)
             {
-                weaponSpawn.EquipWeaponToPlayer(); // Equip the weapon to the player
+                weaponSpawn.EquipWeaponToPlayer();
                 Debug.Log("Weapon equipped to player.");
             }
             else
@@ -193,19 +271,75 @@ public class GameManager : MonoBehaviour
     // Spawn new wave of enemies and coins
     void SpawnNewWave()
     {
-        int numEnemies = 5 + currentWave * 2;  
-        int numCoins = 5 + currentWave * 2;
+        int numSmallEnemies = 3 + currentWave;
+        int numBigEnemies = 1 + (currentWave / 2);
+        int numCoins = 5 + currentWave;
 
-        for (int i = 0; i < numEnemies; i++)
+        // Spawn small enemies
+        if (smolEnemyPrefab != null)
         {
-            Vector3 spawnPosition = new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), 0);
-            Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+            for (int i = 0; i < numSmallEnemies; i++)
+            {
+                Vector3 spawnPosition = GetRandomSpawnPosition();
+                GameObject enemy = Instantiate(smolEnemyPrefab, spawnPosition, Quaternion.identity);
+                enemy.transform.localScale = new Vector3(5f, 5f, 1f);
+                
+                SpriteRenderer renderer = enemy.GetComponent<SpriteRenderer>();
+                if (renderer != null)
+                {
+                    renderer.sortingOrder = 5;
+                }
+            }
+        }
+        else
+        {
+            Debug.LogError("Small enemy prefab is missing!");
         }
 
-        for (int i = 0; i < numCoins; i++)
+        // Spawn big enemies
+        if (bigEnemyPrefab != null)
         {
-            Vector3 spawnPosition = new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), 0);
-            Instantiate(coinPrefab, spawnPosition, Quaternion.identity);
+            for (int i = 0; i < numBigEnemies; i++)
+            {
+                Vector3 spawnPosition = GetRandomSpawnPosition();
+                GameObject enemy = Instantiate(bigEnemyPrefab, spawnPosition, Quaternion.identity);
+                enemy.transform.localScale = new Vector3(4f, 4f, 4f);
+
+                // Add BoxCollider2D adjustment
+                BoxCollider2D collider = enemy.GetComponent<BoxCollider2D>();
+                if (collider != null)
+                {
+                    collider.size = new Vector2(1f, 1f);  // Larger collider
+                    collider.offset = Vector2.zero;
+                    collider.isTrigger = false;  // Ensure it's not a trigger
+                }
+
+                SpriteRenderer renderer = enemy.GetComponent<SpriteRenderer>();
+                if (renderer != null)
+                {
+                    renderer.sortingOrder = 5;
+                }
+            }
+        }
+        else
+        {
+            Debug.LogError("Big enemy prefab is missing!");
+        }
+
+        // Spawn coins with null check
+        if (coinPrefab != null)
+        {
+            for (int i = 0; i < numCoins; i++)
+            {
+                Vector3 spawnPosition = new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), 0);
+                GameObject coin = Instantiate(coinPrefab, spawnPosition, Quaternion.identity);
+                coin.transform.localScale = new Vector3(2f, 2f, 1f);
+                RegisterCoin();
+            }
+        }
+        else
+        {
+            Debug.LogError("Coin prefab is missing!");
         }
     }
 

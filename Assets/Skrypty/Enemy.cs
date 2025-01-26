@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
     public GameObject coinPrefab;  
     public Transform coinSpawnPoint;  
 
-    void Start()
+    public void Start()
     {
         currentHealth = maxHealth;
         GameManager.Instance.RegisterEnemy(this);

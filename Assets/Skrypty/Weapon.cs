@@ -10,7 +10,7 @@ public class Weapon : MonoBehaviour
     private GameObject player;
     private Vector3 relativePosition;
     public float offsetDistance = 2f;
-    private float weaponLength;
+    public float weaponLength;
     private Transform attackPoint;
 
     public void SetInitialPosition(Vector3 position)

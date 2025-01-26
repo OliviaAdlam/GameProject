@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 307963566880005982}
   - component: {fileID: 9094021650690213283}
-  - component: {fileID: 7039500018091945855}
   - component: {fileID: 7742845884207348382}
   - component: {fileID: 361301917415526373}
+  - component: {fileID: 8431458831258978128}
   m_Layer: 3
   m_Name: Enemy
   m_TagString: Enemy
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: dca1a8a2781f4b041bba3189e6285c46, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 11eac439ccf58354fb7f1b7b67737a03, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -87,22 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7039500018091945855
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1563475144714586892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53b176c10a29b1d49bab04292262fa7b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 5
-  damage: 1
-  coinPrefab: {fileID: 1867345877594130589, guid: 55c665f5a7709f840b0949d1a2962221, type: 3}
-  coinSpawnPoint: {fileID: 307963566880005982}
 --- !u!50 &7742845884207348382
 Rigidbody2D:
   serializedVersion: 4
@@ -166,7 +150,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 5.12, y: 5.12}
+    oldSize: {x: 0.32, y: 0.32}
     newSize: {x: 5.12, y: 5.12}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -175,3 +159,24 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 5.12, y: 5.12}
   m_EdgeRadius: 0
+--- !u!114 &8431458831258978128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1563475144714586892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abbb573158df2944c98e4639a1289ddb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 5
+  damage: 1
+  coinPrefab: {fileID: 1867345877594130589, guid: 55c665f5a7709f840b0949d1a2962221, type: 3}
+  coinSpawnPoint: {fileID: 307963566880005982}
+  speed: 1.5
+  detectionRange: 5
+  contactDamage: 1
+  randomMoveDuration: 2
+  changeDirectionCooldown: 1

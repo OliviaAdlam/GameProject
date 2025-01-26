@@ -15,6 +15,8 @@ public class Big_Enemy : Enemy
 
     void Start()
     {
+        base.Start();
+
         animator = GetComponent<Animator>();
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
         if (playerObject != null)

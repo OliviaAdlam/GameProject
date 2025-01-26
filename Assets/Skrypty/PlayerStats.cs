@@ -55,21 +55,57 @@ public class PlayerStats : MonoBehaviour
 
     IEnumerator PerformAttack()
     {
+        if (sword == null || attackPoint == null)
+        {
+            yield break;
+        }
+        
         sword.SetActive(true);
 
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
-
-        foreach (Collider2D enemy in hitEnemies)
+        // Get the weapon component and its sprite renderer
+        Weapon weaponComponent = sword.GetComponent<Weapon>();
+        SpriteRenderer weaponSprite = sword.GetComponent<SpriteRenderer>();
+        
+        if (weaponSprite != null)
         {
-            Enemy enemyScript = enemy.GetComponent<Enemy>();
-            if (enemyScript != null)
+            // Create a smaller hitbox based on the weapon's size
+            Vector2 weaponSize = weaponSprite.bounds.size;
+            Vector2 hitboxSize = new Vector2(weaponSize.x * 0.5f, weaponSize.y * 0.5f);
+            
+            // Calculate the attack point position (at the tip of the weapon)
+            Vector2 attackPosition = attackPoint.position;
+            
+            // Get all colliders within the weapon's actual area
+            Collider2D[] hitColliders = Physics2D.OverlapBoxAll(
+                attackPosition,  // Use attack point position
+                hitboxSize,     // Use smaller hitbox
+                sword.transform.rotation.eulerAngles.z,
+                enemyLayers
+            );
+
+            // Debug visualization
+            Debug.DrawLine(sword.transform.position, attackPoint.position, Color.red, 0.5f);
+
+            foreach (Collider2D hitCollider in hitColliders)
             {
-                enemyScript.TakeDamage(attackDamage);
+                Enemy enemyScript = hitCollider.GetComponent<Enemy>();
+                if (enemyScript != null)
+                {
+                    // Calculate distance from attack point to enemy
+                    float distanceToEnemy = Vector2.Distance(attackPosition, hitCollider.transform.position);
+                    
+                    // Only damage enemies that are very close to the attack point
+                    if (distanceToEnemy <= hitboxSize.magnitude)
+                    {
+                        Debug.Log($"Hit enemy at position {hitCollider.transform.position}, distance: {distanceToEnemy}");
+                        enemyScript.TakeDamage(attackDamage);
+                        break;
+                    }
+                }
             }
         }
 
         yield return new WaitForSeconds(0.3f);
-
         sword.SetActive(false);
     }
 

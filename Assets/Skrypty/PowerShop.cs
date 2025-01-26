@@ -132,16 +132,16 @@ public class PowerShop : MonoBehaviour
     // Add these specific methods for each weapon
     public void BuyWeapon1()
     {
-        BuyWeapon(0, 10); // First weapon, costs 100
+        BuyWeapon(0, 10); // First weapon, costs 10
     }
 
     public void BuyWeapon2()
     {
-        BuyWeapon(1, 20); // Second weapon, costs 200
+        BuyWeapon(1, 200); // Second weapon, costs 20
     }
 
     public void BuyWeapon3()
     {
-        BuyWeapon(2, 30); // Third weapon, costs 300
+        BuyWeapon(2, 300); // Third weapon, costs 30
     }
 }
